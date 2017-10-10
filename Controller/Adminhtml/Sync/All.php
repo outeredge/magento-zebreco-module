@@ -33,7 +33,8 @@ class All extends \OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync
                             'city'      => $addresses[0]->getCity(),
                             'county'    => $addresses[0]->getRegion(),
                             'postcode'  => $addresses[0]->getPostcode(),
-                            'telephone' => $addresses[0]->getTelephone()
+                            'telephone' => $addresses[0]->getTelephone(),
+                            'country'   => $addresses[0]->getCountryModel()->getName()
                         ));
                     }
                     $zebrecoData[] = $customerData;
