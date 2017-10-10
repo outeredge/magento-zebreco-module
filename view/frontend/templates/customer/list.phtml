@@ -1,0 +1,40 @@
+<?php
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php if ($block->getSupportTickets() && count($block->getSupportTickets())): ?>
+    <div class="table-wrapper support-tickets">
+        <table class="data table table-support-tickets" id="my-support-tickets-table">
+            <caption class="table-caption"><?= $block->escapeHtml(__('Support Tickets')) ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col date"><?= $block->escapeHtml(__('Ticket')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($block->getSupportTickets() as $supportTicket): ?>
+                <tr>
+                    <td data-th="<?= $block->escapeHtml(__('Ticket')) ?>" class="col date">
+                        <a href="<?= $block->escapeUrl($block->getSupportTicketUrl($supportTicket)) ?>"><?= $block->escapeHtml($supportTicket->getSubject()) ?></a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($block->getToolbarHtml()): ?>
+        <div class="toolbar support-tickets-toolbar bottom">
+            <?= $block->getToolbarHtml() ?>
+        </div>
+    <?php endif; ?>
+<?php else: ?>
+    <div class="message info empty"><span><?= $block->escapeHtml(__('You have submitted no support tickets.')) ?></span></div>
+<?php endif; ?>
+<div class="actions-toolbar">
+    <div class="secondary">
+        <a class="action back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>">
+            <span><?= $block->escapeHtml(__('Back')) ?></span>
+        </a>
+    </div>
+</div>

@@ -11,7 +11,7 @@ class All extends \OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('customer/index');
 
-        if (!$this->_zebrecoIntegrationHelper->isEnabled()) {
+        if (!$this->zebrecoIntegrationHelper->isEnabled()) {
             $this->messageManager->addWarning(__('The Zebreco API is not enabled.'));
             return $resultRedirect;
         }
@@ -41,9 +41,9 @@ class All extends \OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync
                 }
 
                 $zebrecoApi = new ZebrecoApi(
-                    $this->_zebrecoIntegrationHelper->getAccount(),
-                    $this->_zebrecoIntegrationHelper->getUser(),
-                    $this->_zebrecoIntegrationHelper->getPassword(),
+                    $this->zebrecoIntegrationHelper->getAccount(),
+                    $this->zebrecoIntegrationHelper->getUser(),
+                    $this->zebrecoIntegrationHelper->getPassword(),
                     'contact'
                 );
                 $zebrecoApi->update($zebrecoData);

@@ -7,7 +7,7 @@ abstract class Sync extends \Magento\Backend\App\Action
     /**
      * @var \OuterEdge\ZebrecoIntegration\Helper\Data
      */
-    protected $_zebrecoIntegrationHelper;
+    protected $zebrecoIntegrationHelper;
 
     /**
      * @var \Magento\Customer\Model\CustomerFactory
@@ -25,7 +25,7 @@ abstract class Sync extends \Magento\Backend\App\Action
         \Magento\Customer\Model\CustomerFactory $customerFactory
     ) {
         parent::__construct($context);
-        $this->_zebrecoIntegrationHelper = $zebrecoIntegrationHelper;
+        $this->zebrecoIntegrationHelper = $zebrecoIntegrationHelper;
         $this->_customerFactory = $customerFactory;
     }
 
