@@ -2,16 +2,16 @@
 
 namespace OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync;
 
-use ZebrecoPHP\Api as ZebrecoApi;
+use OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync;
 
-class All extends \OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync
+class All extends Sync
 {
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('customer/index');
 
-        if (!$this->zebrecoIntegrationHelper->isEnabled()) {
+        if (!$this->api->isEnabled()) {
             $this->messageManager->addWarning(__('The Zebreco API is not enabled.'));
             return $resultRedirect;
         }
@@ -39,15 +39,8 @@ class All extends \OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync
                     }
                     $zebrecoData[] = $customerData;
                 }
-
-                $zebrecoApi = new ZebrecoApi(
-                    $this->zebrecoIntegrationHelper->getAccount(),
-                    $this->zebrecoIntegrationHelper->getUser(),
-                    $this->zebrecoIntegrationHelper->getPassword(),
-                    'contact'
-                );
-                $zebrecoApi->update($zebrecoData);
-
+                
+                $this->api->getEndpoint('contact')->update(['contacts' => $zebrecoData]);
                 $this->messageManager->addSuccess(__('Customers have been successfully synced to Zebreco.'));
             }
             return $resultRedirect;

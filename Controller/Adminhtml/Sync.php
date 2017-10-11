@@ -2,35 +2,40 @@
 
 namespace OuterEdge\ZebrecoIntegration\Controller\Adminhtml;
 
-abstract class Sync extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use OuterEdge\ZebrecoIntegration\Helper\Api;
+use Magento\Customer\Model\CustomerFactory;
+
+abstract class Sync extends Action
 {
     /**
-     * @var \OuterEdge\ZebrecoIntegration\Helper\Data
+     * @var Api
      */
-    protected $zebrecoIntegrationHelper;
+    protected $api;
 
     /**
-     * @var \Magento\Customer\Model\CustomerFactory
+     * @var CustomerFactory
      */
-    protected $_customerFactory = null;
+    protected $customerFactory;
 
     /**
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \OuterEdge\ZebrecoIntegration\Helper\Data $zebrecoIntegrationHelper
-     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param Context $context
+     * @param Api $api
+     * @param CustomerFactory $customerFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \OuterEdge\ZebrecoIntegration\Helper\Data $zebrecoIntegrationHelper,
-        \Magento\Customer\Model\CustomerFactory $customerFactory
+        Context $context,
+        Api $api,
+        CustomerFactory $customerFactory
     ) {
         parent::__construct($context);
-        $this->zebrecoIntegrationHelper = $zebrecoIntegrationHelper;
-        $this->_customerFactory = $customerFactory;
+        $this->api = $api;
+        $this->customerFactory = $customerFactory;
     }
 
     public function getCustomers()
     {
-        return $this->_customerFactory->create()->getCollection();
+        return $this->customerFactory->create()->getCollection();
     }
 }
