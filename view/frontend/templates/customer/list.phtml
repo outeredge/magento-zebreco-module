@@ -3,6 +3,9 @@
 // @codingStandardsIgnoreFile
 
 ?>
+<div class="customer-support-ticket-create">
+    <a href="<?= $block->escapeUrl($block->getSupportTicketUrl()) ?>" class="action primary"><?= $block->escapeHtml(__('Create Support Ticket')) ?></a>
+</div>
 <?php if ($block->getSupportTickets() && count($block->getSupportTickets())): ?>
     <div class="table-wrapper support-tickets">
         <table class="data table table-support-tickets" id="my-support-tickets-table">

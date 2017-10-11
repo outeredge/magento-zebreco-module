@@ -104,9 +104,9 @@ class ListCustomer extends Dashboard
     }
 
     /**
-     * Get reviews
+     * Get support tickets
      *
-     * @return bool|\Magento\Review\Model\ResourceModel\Review\Product\Collection
+     * @return bool|\Magento\Framework\Data\Collection
      */
     public function getSupportTickets()
     {
@@ -115,12 +115,14 @@ class ListCustomer extends Dashboard
         }
         
         if (!$this->_collection) {
+            
             $zebrecoCustomerApi = new ZebrecoApi(
                 $this->zebrecoIntegrationHelper->getAccount(),
                 $this->zebrecoIntegrationHelper->getUser(),
                 $this->zebrecoIntegrationHelper->getPassword(),
                 'contact'
             );
+            
             $zebrecoCustomerResults = $zebrecoCustomerApi->getList([
                 'query' => [
                     'page'  => '1',
@@ -128,15 +130,18 @@ class ListCustomer extends Dashboard
                     'q'     => 'email:' . $this->currentCustomer->getCustomer()->getEmail()
                 ]
             ]);
+            
             if (!empty($zebrecoCustomerResults) && count($zebrecoCustomerResults['contacts'])) {
                 
                 $zebrecoCustomerId = $zebrecoCustomerResults['contacts'][0]['id'];
+                
                 $zebrecoTicketApi = new ZebrecoApi(
                     $this->zebrecoIntegrationHelper->getAccount(),
                     $this->zebrecoIntegrationHelper->getUser(),
                     $this->zebrecoIntegrationHelper->getPassword(),
                     'ticket'
                 );
+                
                 $zebrecoTicketResults = $zebrecoTicketApi->getList([
                     'query' => [
                         'page'  => '1',
@@ -144,8 +149,11 @@ class ListCustomer extends Dashboard
                         'q'     => 'contacts.id:' . $zebrecoCustomerId
                     ]
                 ]);
+                
                 if (!empty($zebrecoTicketResults) && count($zebrecoTicketResults['tickets'])) {
+                    
                     $this->_collection = $this->collectionFactory->create();
+                    
                     foreach ($zebrecoTicketResults['tickets'] as $ticket) {
                         $ticketObject = $this->dataObjectFactory->create();
                         $ticketObject->setData($ticket);
@@ -153,13 +161,7 @@ class ListCustomer extends Dashboard
                     }
                 }
             }
-                /*$this->_collection = $this->_collectionFactory->create();
-                $this->_collection
-                    ->addStoreFilter($this->_storeManager->getStore()->getId())
-                    ->addCustomerFilter($customerId)
-                    ->setDateOrder();*/
         }
-
         return $this->_collection;
     }
 
@@ -170,9 +172,12 @@ class ListCustomer extends Dashboard
      * @return string
      * @since 100.2.0
      */
-    public function getSupportTicketUrl($supportTicket)
+    public function getSupportTicketUrl($supportTicket = null)
     {
-        return $this->getUrl('support/customer/view', ['id' => $supportTicket->getId()]);
+        if ($supportTicket) {
+            return $this->getUrl('support/customer/view', ['id' => $supportTicket->getId()]);
+        }
+        return $this->getUrl('support/customer/create');
     }
 
     /**

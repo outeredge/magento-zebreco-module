@@ -1,0 +1,22 @@
+<form action="<?= $block->escapeUrl($block->getAction()) ?>" class="support-ticket-form" method="post" id="support-ticket-form">
+    <?= $block->getBlockHtml('formkey') ?>
+    <fieldset class="fieldset support-ticket-fieldset" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>">
+        <div class="field support-ticket-field-subject required">
+            <label for="subject_field" class="label"><span><?= $block->escapeHtml(__('Subject')) ?></span></label>
+            <div class="control">
+                <input type="text" name="subject" id="subject_field" class="input-text" data-validate="{required:true}" data-bind="value: supportTicket().subject" />
+            </div>
+        </div>
+        <div class="field support-ticket-field-message required">
+            <label for="message_field" class="label"><span><?= $block->escapeHtml(__('Message')) ?></span></label>
+            <div class="control">
+                <input type="text" name="message" id="message_field" class="input-text" data-validate="{required:true}" data-bind="value: supportTicket().message" />
+            </div>
+        </div>
+    </fieldset>
+    <div class="actions-toolbar support-ticket-form-actions">
+        <div class="primary actions-primary">
+            <button type="submit" class="action submit primary"><span><?= $block->escapeHtml(__('Submit Support Ticket')) ?></span></button>
+        </div>
+    </div>
+</form>
