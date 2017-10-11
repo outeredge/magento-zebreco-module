@@ -112,7 +112,10 @@ class Post extends CustomerController
     {
         $contact = $this->api->getContactByEmail($this->customerSession->getCustomer()->getEmail());
         $post['creator'] = $contact['id'];
-        $post['posts'][0]['body'] = $post['comment'];
+        $post['posts'][] = [
+            'body' => $post['comment'],
+            'contacts' => [$contact['id']]
+        ];
         
         $response = $this->api->getEndpoint('ticket')->create($post);
         if (isset($response['ticket']) && $response['ticket']['id']) {
