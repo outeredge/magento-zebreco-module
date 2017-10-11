@@ -2,12 +2,15 @@
 
 namespace OuterEdge\ZebrecoIntegration\Block\Adminhtml\Form\Field;
 
-class Customermapping extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray
+use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
+use OuterEdge\ZebrecoIntegration\Block\Adminhtml\Form\Field\Customerattribute;
+
+class Customermapping extends AbstractFieldArray
 {
     /**
      * @var Customerattribute
      */
-    protected $_attributeRenderer;
+    protected $attributeRenderer;
 
     /**
      * Retrieve attribute column renderer

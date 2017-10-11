@@ -2,11 +2,14 @@
 
 namespace OuterEdge\ZebrecoIntegration\Block\Customer;
 
+use Magento\Customer\Block\Account\Dashboard;
 use OuterEdge\ZebrecoIntegration\Helper\Api;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Block\Account\Dashboard;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Customer\Model\Session;
 use Magento\Customer\Helper\Session\CurrentCustomer;
+use Magento\Newsletter\Model\SubscriberFactory;
 use Magento\Framework\Data\CollectionFactory;
 use Magento\Framework\Data\Collection;
 use Magento\Framework\DataObjectFactory;
@@ -40,31 +43,33 @@ class ListCustomer extends Dashboard
     protected $dataObjectFactory;
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param Context $context
      * @param Api $api
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory
+     * @param Session $customerSession
+     * @param SubscriberFactory $subscriberFactory
      * @param CustomerRepositoryInterface $customerRepository
      * @param AccountManagementInterface $customerAccountManagement
-     * @param \Magento\Customer\Helper\Session\CurrentCustomer $currentCustomer
-     * @param \OuterEdge\ZebrecoIntegration\Helper\Data $zebrecoIntegrationHelper
+     * @param CurrentCustomer $currentCustomer
      * @param CollectionFactory $collectionFactory
      * @param DataObjectFactory $dataObjectFactory
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
+        Context $context,
         Api $api,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory,
+        Session $customerSession,
+        SubscriberFactory $subscriberFactory,
         CustomerRepositoryInterface $customerRepository,
         AccountManagementInterface $customerAccountManagement,
-        \Magento\Customer\Helper\Session\CurrentCustomer $currentCustomer,
+        CurrentCustomer $currentCustomer,
         CollectionFactory $collectionFactory,
         DataObjectFactory $dataObjectFactory,
         array $data = []
     ) {
+        $this->api = $api;
+        $this->currentCustomer = $currentCustomer;
         $this->collectionFactory = $collectionFactory;
+        $this->dataObjectFactory = $dataObjectFactory;
         parent::__construct(
             $context,
             $customerSession,
@@ -73,10 +78,6 @@ class ListCustomer extends Dashboard
             $customerAccountManagement,
             $data
         );
-        $this->api = $api;
-        $this->currentCustomer = $currentCustomer;
-        $this->collectionFactory = $collectionFactory;
-        $this->dataObjectFactory = $dataObjectFactory;
     }
 
     /**

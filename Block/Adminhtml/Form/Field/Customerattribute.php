@@ -2,37 +2,34 @@
 
 namespace OuterEdge\ZebrecoIntegration\Block\Adminhtml\Form\Field;
 
-/**
- * HTML select element block with customer attributes options
- */
-class Customerattribute extends \Magento\Framework\View\Element\Html\Select
+use Magento\Framework\View\Element\Html\Select;
+use Magento\Framework\View\Element\Context;
+use Magento\Customer\Model\CustomerFactory;
+
+class Customerattribute extends Select
 {
     /**
-     * Customer attributes cache
-     *
      * @var array
      */
-    private $_customerAttributes;
+    protected $customerAttributes;
 
     /**
-     * @var \Magento\Customer\Model\CustomerFactory
+     * @var CustomerFactory
      */
-    protected $_customerFactory;
+    protected $customerFactory;
 
     /**
-     * Construct
-     *
-     * @param \Magento\Framework\View\Element\Context $context
-     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param Context $context
+     * @param CustomerFactory $customerFactory
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Context $context,
-        \Magento\Customer\Model\CustomerFactory $customerFactory,
+        Context $context,
+        CustomerFactory $customerFactory,
         array $data = []
     ) {
+        $this->customerFactory = $customerFactory;
         parent::__construct($context, $data);
-        $this->_customerFactory = $customerFactory;
     }
 
     /**
@@ -45,7 +42,7 @@ class Customerattribute extends \Magento\Framework\View\Element\Html\Select
     {
         if ($this->_customerAttributes === null) {
             $this->_customerAttributes = [];
-            foreach ($this->_customerFactory->create()->getAttributes() as $attributeModel) {
+            foreach ($this->customerFactory->create()->getAttributes() as $attributeModel) {
                 $this->_customerAttributes[$attributeModel->getAttributeCode()] = $attributeModel->getAttributeCode();
             }
         }

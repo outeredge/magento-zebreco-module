@@ -29,9 +29,9 @@ abstract class Sync extends Action
         Api $api,
         CustomerFactory $customerFactory
     ) {
-        parent::__construct($context);
         $this->api = $api;
         $this->customerFactory = $customerFactory;
+        parent::__construct($context);
     }
 
     public function getCustomers()

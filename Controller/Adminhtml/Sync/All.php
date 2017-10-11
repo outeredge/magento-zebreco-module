@@ -6,6 +6,9 @@ use OuterEdge\ZebrecoIntegration\Controller\Adminhtml\Sync;
 
 class All extends Sync
 {
+    /**
+     * Sync all magento customers to zebreco contacts
+     */
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
