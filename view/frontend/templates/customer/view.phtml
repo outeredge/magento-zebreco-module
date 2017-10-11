@@ -1,0 +1,21 @@
+Viewing my support ticket
+
+<?php if ($block->getSupportTicket()): ?>
+    <div class="support-ticket-view">
+    
+        <?php print_r($block->getSupportTicket()->getData()) ?>
+    
+        <?php if ($block->getSupportTicket()->getPosts() && count($block->getSupportTicket()->getPosts())): ?>
+            <div class="support-ticket-posts">
+                <?php foreach ($block->getSupportTicket()->getPosts() as $post): ?>
+                    <div class="support-ticket-post">
+                        <div class="support-ticket-contact">
+                            <img src="scott.jpg" alt="">
+                        </div>
+                        <?php print_r($post) ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
