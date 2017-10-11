@@ -4,15 +4,15 @@ namespace OuterEdge\ZebrecoIntegration\Block\Customer;
 
 use Magento\Framework\View\Element\Template;
 
-class CreateForm extends Template
+class ReplyForm extends Template
 {
     /**
-     * Returns action url for support ticket create form
+     * Returns action url for support ticket reply form
      *
      * @return string
      */
     public function getFormAction()
     {
-        return $this->getUrl('support/customer/createPost', ['_secure' => true]);
+        return $this->getUrl('support/customer/replyPost', ['_secure' => true]);
     }
 }

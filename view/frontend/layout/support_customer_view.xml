@@ -5,8 +5,10 @@
         <css src="OuterEdge_ZebrecoIntegration::css/support-customer-view.css"/>
     </head>
     <body>
+        <referenceBlock name="page.main.title" remove="true"/>
         <referenceContainer name="content">
             <block class="OuterEdge\ZebrecoIntegration\Block\Customer\View" name="support_customer_view" template="OuterEdge_ZebrecoIntegration::customer/view.phtml"/>
+            <block class="OuterEdge\ZebrecoIntegration\Block\Customer\ReplyForm" name="support_customer_reply" template="OuterEdge_ZebrecoIntegration::customer/reply.phtml"/>
         </referenceContainer>
     </body>
 </page>

@@ -1,12 +1,27 @@
+
+.support-ticket-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 3em;
+    border-bottom: 1px solid #dddddd;
+}
+.support-ticket-header h1 {
+    flex-grow: 1;
+    margin-bottom: 0;
+    padding-right: 2em;
+}
+.support-ticket-header h1 span {
+    font-size: 40%;
+    display: block;
+    padding-top: .5em;
+}
 .support-ticket-post {
-    margin-top: 2em;
-    margin-bottom: 2em;
-    border-top: 1px solid #dddddd;
+    padding: 3em 2em;
+    border-bottom: 1px solid #dddddd;
 }
 .support-ticket-post-contact {
     display: flex;
     align-items: center;
-    padding-top: 2em;
     padding-bottom: 2em;
 }
 .support-ticket-post-contact img {
@@ -14,9 +29,18 @@
     height: 40px;
     margin-right: 1em;
 }
-
+.support-ticket-post-contact div {
+    flex-grow: 1;
+}
 .support-ticket-post-contact h4,
 .support-ticket-post-contact h5 {
     margin-top: .5em;
     margin-bottom: .5em;
+}
+.support-ticket-post-contact span {
+    font-size: 90%;
+    text-align: right;
+}
+.form.support-ticket-reply {
+    padding: 3em 2em;    
 }

@@ -23,7 +23,7 @@ class Index extends CustomerController
         /*if ($block = $resultPage->getLayout()->getBlock('review_customer_list')) {
             $block->setRefererUrl($this->_redirect->getRefererUrl());
         }*/
-        $resultPage->getConfig()->getTitle()->set(__('My Support Tickets'));
+        $resultPage->getConfig()->getTitle()->set(__('Support Tickets'));
         return $resultPage;
     }
 }

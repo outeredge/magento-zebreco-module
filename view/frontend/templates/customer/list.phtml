@@ -5,14 +5,14 @@
 ?>
 <div class="customer-support-ticket-create">
     <a href="<?= $block->escapeUrl($block->getSupportTicketUrl()) ?>" class="action primary"><?= $block->escapeHtml(__('Create Support Ticket')) ?></a>
-</div>
+</div><br>
 <?php if ($block->getSupportTickets() && count($block->getSupportTickets())): ?>
     <div class="table-wrapper support-tickets">
         <table class="data table table-support-tickets" id="my-support-tickets-table">
             <caption class="table-caption"><?= $block->escapeHtml(__('Support Tickets')) ?></caption>
             <thead>
                 <tr>
-                    <th scope="col" class="col date"><?= $block->escapeHtml(__('Ticket')) ?></th>
+                    <th scope="col" class="col date"><?= $block->escapeHtml(__('Support Ticket')) ?></th>
                 </tr>
             </thead>
             <tbody>

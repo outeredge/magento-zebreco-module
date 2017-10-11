@@ -14,7 +14,7 @@ use Magento\Framework\HTTP\PhpEnvironment\Request;
 use Psr\Log\LoggerInterface;
 use Exception;
 
-class Post extends CustomerController
+class ReplyPost extends CustomerController
 {
     /**
      * @var Api
@@ -67,25 +67,31 @@ class Post extends CustomerController
             $this->messageManager->addErrorMessage(
                 __('An error occurred while processing your form. Please try again.')
             );
-            return $this->resultRedirectFactory->create()->setPath('*/*/');
+            $resultRedirect = $this->resultRedirectFactory->create();
+            $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+            return $resultRedirect;
         }
+        
         try {
-            $this->createSupportTicket($this->validatedParams());
+            $this->replySupportTicket($this->validatedParams());
             $this->messageManager->addSuccess(
-                __('Thanks for contacting us with your comments and questions. We\'ll respond to you very soon.')
+                __('Thanks for replying with your comments and questions. We\'ll respond to you very soon.')
             );
-            $this->getDataPersistor()->clear('support_ticket');
+            $this->getDataPersistor()->clear('support_ticket_reply');
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-            $this->getDataPersistor()->set('support_ticket', $this->getRequest()->getParams());
+            $this->getDataPersistor()->set('support_ticket_reply', $this->getRequest()->getParams());
         } catch (Exception $e) {
             $this->logger->critical($e);
             $this->messageManager->addErrorMessage(
-                __('An error occurred while processing your form. Please try again later.')
+                __('An error occurred while processing your reply. Please try again later.')
             );
-            $this->getDataPersistor()->set('support_ticket', $this->getRequest()->getParams());
+            $this->getDataPersistor()->set('support_ticket_reply', $this->getRequest()->getParams());
         }
-        return $this->resultRedirectFactory->create()->setPath('*/*/index');
+        
+        $resultRedirect = $this->resultRedirectFactory->create();
+        $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+        return $resultRedirect;
     }
 
     /**
@@ -108,22 +114,22 @@ class Post extends CustomerController
      * @throws Exception
      * @return void
      */
-    private function createSupportTicket($post)
+    private function replySupportTicket($post)
     {
-        $contact = $this->api->getContactByEmail($this->customerSession->getCustomer()->getEmail());
-        $post['creator'] = $contact['id'];
-        $post['posts'][] = [
-            'body' => $post['comment'],
-            'contacts' => [$contact['id']]
-        ];
+        $ticketId = $this->getRequest()->getParam('id');
+        $post['ticket'] = $ticketId;
         
-        $response = $this->api->getEndpoint('ticket')->create($post);
-        if (isset($response['ticket']) && $response['ticket']['id']) {
+        $contact = $this->api->getContactByEmail($this->customerSession->getCustomer()->getEmail());
+        $post['contacts'] = [$contact['id']];
+        
+        $endpoint = 'ticket/' . $ticketId . '/post?status=open';
+        $response = $this->api->getEndpoint($endpoint)->create($post);
+        if (isset($response['ticketpost']) && $response['ticketpost']['id']) {
             return true;
         }
         
         $this->logger->critical($response);
-        throw new Exception('Unable to create support ticket via API');
+        throw new Exception('Unable to reply to support ticket via API');
     }
 
     /**
@@ -143,11 +149,8 @@ class Post extends CustomerController
     private function validatedParams()
     {
         $request = $this->getRequest();
-        if (trim($request->getParam('subject')) === '') {
-            throw new LocalizedException(__('Subject is missing'));
-        }
-        if (trim($request->getParam('comment')) === '') {
-            throw new LocalizedException(__('Comment is missing'));
+        if (trim($request->getParam('body')) === '') {
+            throw new LocalizedException(__('Body is missing'));
         }
         if (trim($request->getParam('hideit')) !== '') {
             throw new Exception();

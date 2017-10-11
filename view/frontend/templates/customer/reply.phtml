@@ -3,19 +3,14 @@
 // @codingStandardsIgnoreFile
 
 ?>
-<form class="form support-ticket-create"
+<form class="form support-ticket-reply"
       action="<?= $block->escapeUrl($block->getFormAction()) ?>"
-      id="support-ticket-create-form"
+      id="support-ticket-reply-form"
       method="post"
       data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
       data-mage-init='{"validation":{}}'>
+    <h2 class="support-ticket-reply-title"><?= $block->escapeHtmlAttr(__('Reply')) ?></h2>
     <fieldset class="fieldset">
-        <div class="field subject required">
-            <label class="label" for="subject"><span><?= $block->escapeHtml(__('Subject')) ?></span></label>
-            <div class="control">
-                <input name="subject" id="subject" title="<?= $block->escapeHtmlAttr(__('Subject')) ?>" class="input-text" type="text" data-validate="{required:true}"/>
-            </div>
-        </div>
         <div class="field body required">
             <label class="label" for="body"><span><?= $block->escapeHtml(__('Your Message')) ?></span></label>
             <div class="control">

@@ -1,7 +1,11 @@
 <?php if ($block->getSupportTicket()): ?>
     <div class="support-ticket-view">
-        <div class="support-ticket-status">
-            <span class="action primary"><?= $block->getSupportTicket()->getStatus() ?></span>
+        <div class="support-ticket-header">
+            <h1>
+                <?= $block->getSupportTicket()->getSubject() ?>
+                <span>Support Ticket #<?= $block->getSupportTicket()->getId() ?></span>
+            </h1>
+            <span class="action primary"><?= $block->getStatus() ?></span>
         </div>
         <?php if ($block->getSupportTicket()->getPosts() && count($block->getSupportTicket()->getPosts())): ?>
             <div class="support-ticket-posts">
@@ -13,9 +17,10 @@
                                 <h4><?= $post->getCreator()['name'] ?></h4>
                                 <h5><?= $post->getCreator()['email'] ?></h5>
                             </div>
+                            <span><?= $block->dateTimeFormat($post->getCreateddate()) ?></span>
                         </div>
                         <div class="support-ticket-post-body">
-                            <?= nl2br($post->getBody()) ?>
+                            <?= $block->parseMarkdown($post->getBody()) ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
