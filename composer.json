@@ -15,7 +15,9 @@
     ],
     "require": {
         "php": "7.0.2|7.0.4|~7.0.6|~7.1.0",
-        "outeredge/zebreco-php": "dev-master"
+        "outeredge/zebreco-php": "dev-master",
+        "outeredge/edge-module": "2.3.1",
+        "erusev/parsedown": "1.6.3"
     },
     "require-dev": {
         "magento-ecg/coding-standard": "~3.0",

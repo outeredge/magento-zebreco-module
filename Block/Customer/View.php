@@ -7,6 +7,7 @@ use Magento\Framework\View\Element\Template\Context;
 use OuterEdge\ZebrecoIntegration\Helper\Api;
 use Magento\Framework\DataObjectFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Data\CollectionFactory;
 
 class View extends Template
 {
@@ -21,6 +22,11 @@ class View extends Template
     protected $dataObjectFactory;
     
     /**
+     * @var CollectionFactory
+     */
+    protected $collectionFactory;
+    
+    /**
      * @var null|DataObject
      */
     protected $supportTicket = null;
@@ -29,14 +35,17 @@ class View extends Template
      * @param Context $context
      * @param Api $api
      * @param DataObjectFactory $dataObjectFactory
+     * @param CollectionFactory $collectionFactory
      */
     public function __construct(
         Context $context,
         Api $api,
-        DataObjectFactory $dataObjectFactory
+        DataObjectFactory $dataObjectFactory,
+        CollectionFactory $collectionFactory
     ) {
         $this->api = $api;
         $this->dataObjectFactory = $dataObjectFactory;
+        $this->collectionFactory = $collectionFactory;
         parent::__construct($context);
     }
     

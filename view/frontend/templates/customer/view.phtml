@@ -1,18 +1,22 @@
-Viewing my support ticket
-
 <?php if ($block->getSupportTicket()): ?>
     <div class="support-ticket-view">
-    
-        <?php print_r($block->getSupportTicket()->getData()) ?>
-    
+        <div class="support-ticket-status">
+            <span class="action primary"><?= $block->getSupportTicket()->getStatus() ?></span>
+        </div>
         <?php if ($block->getSupportTicket()->getPosts() && count($block->getSupportTicket()->getPosts())): ?>
             <div class="support-ticket-posts">
                 <?php foreach ($block->getSupportTicket()->getPosts() as $post): ?>
                     <div class="support-ticket-post">
-                        <div class="support-ticket-contact">
-                            <img src="scott.jpg" alt="">
+                        <div class="support-ticket-post-contact">
+                            <img src="<?= $post->getCreator()['avatar'] ?>" alt="<?= $post->getCreator()['name'] ?>">
+                            <div>
+                                <h4><?= $post->getCreator()['name'] ?></h4>
+                                <h5><?= $post->getCreator()['email'] ?></h5>
+                            </div>
                         </div>
-                        <?php print_r($post) ?>
+                        <div class="support-ticket-post-body">
+                            <?= nl2br($post->getBody()) ?>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>
