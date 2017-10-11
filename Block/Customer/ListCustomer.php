@@ -2,27 +2,32 @@
 
 namespace OuterEdge\ZebrecoIntegration\Block\Customer;
 
+use OuterEdge\ZebrecoIntegration\Helper\Api;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Block\Account\Dashboard;
 use Magento\Customer\Helper\Session\CurrentCustomer;
-use ZebrecoPHP\Api as ZebrecoApi;
 use Magento\Framework\Data\CollectionFactory;
+use Magento\Framework\Data\Collection;
 use Magento\Framework\DataObjectFactory;
+use Magento\Framework\DataObject;
 
 class ListCustomer extends Dashboard
 {
+    /**
+     * @var Api
+     */
+    protected $api;
+    
     /**
      * @var CurrentCustomer
      */
     protected $currentCustomer;
     
     /**
-     * @var \OuterEdge\ZebrecoIntegration\Helper\Data
+     * @var Collection
      */
-    protected $zebrecoIntegrationHelper;
-    
-    protected $_collection;
+    protected $collection;
     
     /**
      * @var CollectionFactory
@@ -36,6 +41,7 @@ class ListCustomer extends Dashboard
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param Api $api
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory
      * @param CustomerRepositoryInterface $customerRepository
@@ -48,17 +54,17 @@ class ListCustomer extends Dashboard
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
+        Api $api,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory,
         CustomerRepositoryInterface $customerRepository,
         AccountManagementInterface $customerAccountManagement,
         \Magento\Customer\Helper\Session\CurrentCustomer $currentCustomer,
-        \OuterEdge\ZebrecoIntegration\Helper\Data $zebrecoIntegrationHelper,
         CollectionFactory $collectionFactory,
         DataObjectFactory $dataObjectFactory,
         array $data = []
     ) {
-        $this->_collectionFactory = $collectionFactory;
+        $this->collectionFactory = $collectionFactory;
         parent::__construct(
             $context,
             $customerSession,
@@ -67,8 +73,8 @@ class ListCustomer extends Dashboard
             $customerAccountManagement,
             $data
         );
+        $this->api = $api;
         $this->currentCustomer = $currentCustomer;
-        $this->zebrecoIntegrationHelper = $zebrecoIntegrationHelper;
         $this->collectionFactory = $collectionFactory;
         $this->dataObjectFactory = $dataObjectFactory;
     }
@@ -106,7 +112,7 @@ class ListCustomer extends Dashboard
     /**
      * Get support tickets
      *
-     * @return bool|\Magento\Framework\Data\Collection
+     * @return bool|Collection
      */
     public function getSupportTickets()
     {
@@ -114,55 +120,31 @@ class ListCustomer extends Dashboard
             return false;
         }
         
-        if (!$this->_collection) {
+        if (!$this->collection) {
             
-            $zebrecoCustomerApi = new ZebrecoApi(
-                $this->zebrecoIntegrationHelper->getAccount(),
-                $this->zebrecoIntegrationHelper->getUser(),
-                $this->zebrecoIntegrationHelper->getPassword(),
-                'contact'
-            );
-            
-            $zebrecoCustomerResults = $zebrecoCustomerApi->getList([
-                'query' => [
-                    'page'  => '1',
-                    'limit' => '1',
-                    'q'     => 'email:' . $this->currentCustomer->getCustomer()->getEmail()
-                ]
-            ]);
-            
-            if (!empty($zebrecoCustomerResults) && count($zebrecoCustomerResults['contacts'])) {
+            $contact = $this->api->getContactByEmail($this->currentCustomer->getCustomer()->getEmail());
+            if ($contact) {
                 
-                $zebrecoCustomerId = $zebrecoCustomerResults['contacts'][0]['id'];
-                
-                $zebrecoTicketApi = new ZebrecoApi(
-                    $this->zebrecoIntegrationHelper->getAccount(),
-                    $this->zebrecoIntegrationHelper->getUser(),
-                    $this->zebrecoIntegrationHelper->getPassword(),
-                    'ticket'
-                );
-                
-                $zebrecoTicketResults = $zebrecoTicketApi->getList([
+                $zebrecoTickets = $this->api->getEndpoint('ticket')->getList([
                     'query' => [
                         'page'  => '1',
                         'limit' => '10',
-                        'q'     => 'contacts.id:' . $zebrecoCustomerId
+                        'q'     => 'contacts.id:' . $contact['id']
                     ]
                 ]);
-                
-                if (!empty($zebrecoTicketResults) && count($zebrecoTicketResults['tickets'])) {
+                if (!empty($zebrecoTickets) && count($zebrecoTickets['tickets'])) {
                     
-                    $this->_collection = $this->collectionFactory->create();
+                    $this->collection = $this->collectionFactory->create();
                     
-                    foreach ($zebrecoTicketResults['tickets'] as $ticket) {
+                    foreach ($zebrecoTickets['tickets'] as $ticket) {
                         $ticketObject = $this->dataObjectFactory->create();
                         $ticketObject->setData($ticket);
-                        $this->_collection->addItem($ticketObject);
+                        $this->collection->addItem($ticketObject);
                     }
                 }
             }
         }
-        return $this->_collection;
+        return $this->collection;
     }
 
     /**

@@ -2,92 +2,114 @@
 
 namespace OuterEdge\ZebrecoIntegration\Helper;
 
-class Data
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Core\Model\Store;
+use OuterEdge\ZebrecoIntegration\Model\Configuration;
+
+class Data extends AbstractHelper
 {
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
-    protected $_scopeConfig;
+    protected $scopeConfig;
+    
+    /**
+     * @var boolean
+     */
+    protected $isEnabled;
 
     /**
      * @var string
      */
-    protected $_account;
+    protected $account;
 
     /**
      * @var string
      */
-    protected $_user;
+    protected $user;
 
     /**
      * @var string
      */
-    protected $_password;
+    protected $password;
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Context $context
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        Context $context,
+        ScopeConfigInterface $scopeConfig
     ) {
-        $this->_scopeConfig = $scopeConfig;
+        $this->scopeConfig = $scopeConfig;
+        parent::__construct($context);
     }
 
     /**
-     * @param \Magento\Core\Model\Store $store
+     * @param Store $store
      * @return boolean
      */
     public function isEnabled($store = null)
     {
-        return !empty($this->getAccount($store));
-    }
-
-    /**
-     * @param \Magento\Core\Model\Store $store
-     * @return string
-     */
-    public function getAccount($store = null)
-    {
-        if ($this->_account === null) {
-            $this->_account = $this->_scopeConfig->getValue(
-                \OuterEdge\ZebrecoIntegration\Model\Configuration::XML_PATH_ACCOUNT_NAME,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+        if ($this->isEnabled === null) {
+            $this->isEnabled = $this->scopeConfig->getValue(
+                Configuration::XML_PATH_IS_ENABLED,
+                ScopeInterface::SCOPE_STORE,
                 $store
             );
         }
-        return $this->_account;
+        return $this->isEnabled;
     }
 
     /**
-     * @param \Magento\Core\Model\Store $store
+     * @param Store $store
      * @return string
      */
-    public function getUser($store = null)
+    protected function getAccount($store = null)
     {
-        if ($this->_user === null) {
-            $this->_user = $this->_scopeConfig->getValue(
-                \OuterEdge\ZebrecoIntegration\Model\Configuration::XML_PATH_ACCOUNT_USER,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+        if ($this->account === null) {
+            $this->account = $this->scopeConfig->getValue(
+                Configuration::XML_PATH_ACCOUNT_NAME,
+                ScopeInterface::SCOPE_STORE,
                 $store
             );
         }
-        return $this->_user;
+        return $this->account;
     }
 
     /**
-     * @param \Magento\Core\Model\Store $store
+     * @param Store $store
      * @return string
      */
-    public function getPassword($store = null)
+    protected function getUser($store = null)
     {
-        if ($this->_password === null) {
-            $this->_password = $this->_scopeConfig->getValue(
-                \OuterEdge\ZebrecoIntegration\Model\Configuration::XML_PATH_ACCOUNT_PASSWORD,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+        if ($this->user === null) {
+            $this->user = $this->scopeConfig->getValue(
+                Configuration::XML_PATH_ACCOUNT_USER,
+                ScopeInterface::SCOPE_STORE,
                 $store
             );
         }
-        return $this->_password;
+        return $this->user;
+    }
+
+    /**
+     * @param Store $store
+     * @return string
+     */
+    protected function getPassword($store = null)
+    {
+        if ($this->password === null) {
+            $this->password = $this->scopeConfig->getValue(
+                Configuration::XML_PATH_ACCOUNT_PASSWORD,
+                ScopeInterface::SCOPE_STORE,
+                $store
+            );
+        }
+        return $this->password;
     }
 
 }

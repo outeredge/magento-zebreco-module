@@ -3,7 +3,7 @@
     <update handle="customer_account"/>
     <body>
         <referenceContainer name="content">
-            <block class="OuterEdge\ZebrecoIntegration\Block\Customer\Create" name="support_customer_create" template="OuterEdge_ZebrecoIntegration::customer/create.phtml"/>
+            <block class="OuterEdge\ZebrecoIntegration\Block\Customer\CreateForm" name="support_customer_create" template="OuterEdge_ZebrecoIntegration::customer/create.phtml"/>
         </referenceContainer>
     </body>
 </page>
