@@ -13,6 +13,6 @@ class ReplyForm extends Template
      */
     public function getFormAction()
     {
-        return $this->getUrl('support/customer/replyPost', ['_secure' => true]);
+        return $this->getUrl('support/customer/replyPost', ['_secure' => true, '_current' => true]);
     }
 }

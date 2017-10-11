@@ -120,10 +120,11 @@ class ReplyPost extends CustomerController
         $post['ticket'] = $ticketId;
         
         $contact = $this->api->getContactByEmail($this->customerSession->getCustomer()->getEmail());
+        $post['creator'] = $contact['id'];
         $post['contacts'] = [$contact['id']];
         
         $endpoint = 'ticket/' . $ticketId . '/post?status=open';
-        $response = $this->api->getEndpoint($endpoint)->create($post);
+        $response = $this->api->getEndpoint($endpoint)->create(['ticketpost' => $post]);
         if (isset($response['ticketpost']) && $response['ticketpost']['id']) {
             return true;
         }

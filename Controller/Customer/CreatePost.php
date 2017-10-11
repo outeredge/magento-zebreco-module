@@ -117,7 +117,7 @@ class CreatePost extends CustomerController
             'contacts' => [$contact['id']]
         ];
         
-        $response = $this->api->getEndpoint('ticket')->create($post);
+        $response = $this->api->getEndpoint('ticket')->create(['ticket' => $post]);
         if (isset($response['ticket']) && $response['ticket']['id']) {
             return true;
         }
